@@ -1,55 +1,79 @@
 .page {
-  font-family: sans-serif;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--foreground, #171717);
 }
 
-.main {
-  flex: 1;
-  padding: 4rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+.mainContent {
+  flex: 1; /* Footer’ı sayfanın en altına iter */
 }
 
 .hero {
+  position: relative;
   text-align: center;
-  margin-bottom: 4rem;
+  padding: 6rem 2rem;
+  color: white;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+/* Blur ve background */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("/plant-background.jpg") center/cover no-repeat;
+  filter: blur(0px) brightness(0.6); /* blur azaltıldı */
+  z-index: -1;
 }
 
 .hero h1 {
   font-size: 3rem;
-  color: #2e7d32;
+  margin-bottom: 1rem;
 }
 
 .hero p {
   font-size: 1.25rem;
-  margin: 1rem 0;
-  color: #555;
+  margin-bottom: 2rem;
 }
 
 .ctas {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 2rem;
 }
 
 .primary {
-  background: #2e7d32;
-  color: white;
+  background-color: var(--primary-color, #2e7d32);
+  color: #fff;
   padding: 0.75rem 1.5rem;
-  border-radius: 5px;
+  border-radius: 6px;
   text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.primary:hover {
+  background-color: var(--secondary-color, #81c784);
 }
 
 .secondary {
-  background: #fff;
-  border: 2px solid #2e7d32;
-  color: #2e7d32;
+  background-color: transparent;
+  border: 2px solid var(--primary-color, #2e7d32);
+  color: var(--primary-color, #2e7d32);
   padding: 0.75rem 1.5rem;
-  border-radius: 5px;
+  border-radius: 6px;
   text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.secondary:hover {
+  background-color: var(--primary-color, #2e7d32);
+  color: #fff;
 }
 
 .features {
@@ -57,16 +81,18 @@
   justify-content: space-around;
   flex-wrap: wrap;
   gap: 2rem;
+  margin: 4rem 2rem;
 }
 
 .feature {
   text-align: center;
   max-width: 250px;
+  color: #171717;
 }
 
 .feature h3 {
   margin-top: 1rem;
-  color: #2e7d32;
+  color: var(--primary-color, #2e7d32);
 }
 
 .feature p {
@@ -76,5 +102,22 @@
 .footer {
   text-align: center;
   padding: 2rem;
-  background: #852b2b;
+  background: #2e7d32; /* primary-color ile uyumlu */
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: 2.25rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
 }

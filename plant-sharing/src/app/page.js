@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 export default function Home() {
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
+      <div className={styles.mainContent}>
         {/* Hero Section */}
         <div className={styles.hero}>
           <h1>🌱 Welcome to Plant Sharing</h1>
@@ -46,7 +46,7 @@ export default function Home() {
             <p>Connect with other plant lovers and exchange tips.</p>
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Footer */}
       <footer className={styles.footer}>
