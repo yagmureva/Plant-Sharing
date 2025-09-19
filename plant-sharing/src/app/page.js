@@ -1,5 +1,7 @@
-import Image from "next/image";
 import styles from "./page.module.css";
+import UploadIcon from "@mui/icons-material/Upload";
+import SearchIcon from "@mui/icons-material/Search";
+import PeopleIcon from "@mui/icons-material/People";
 
 export default function Home() {
   return (
@@ -24,24 +26,19 @@ export default function Home() {
         {/* Feature Section */}
         <div className={styles.features}>
           <div className={styles.feature}>
-            <Image src="/upload.svg" alt="Upload" width={64} height={64} />
+            <UploadIcon sx={{ fontSize: 64, color: "#2e7d32" }} />
             <h3>Upload Plants</h3>
             <p>Easily upload photos and details about your plants.</p>
           </div>
           <div className={styles.feature}>
-            <Image src="/discover.svg" alt="Discover" width={64} height={64} />
+            <SearchIcon sx={{ fontSize: 64, color: "#2e7d32" }} />
             <h3>Discover Plants</h3>
             <p>
               Explore a growing collection of plants shared by our community.
             </p>
           </div>
           <div className={styles.feature}>
-            <Image
-              src="/community.svg"
-              alt="Community"
-              width={64}
-              height={64}
-            />
+            <PeopleIcon sx={{ fontSize: 64, color: "#2e7d32" }} />
             <h3>Join the Community</h3>
             <p>Connect with other plant lovers and exchange tips.</p>
           </div>
