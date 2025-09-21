@@ -1,6 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Container,
+} from "@mui/material";
 
 export default function PlantsPage() {
   const [plants, setPlants] = useState([]);
@@ -12,35 +20,33 @@ export default function PlantsPage() {
   }, []);
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>All Plants 🌿</h1>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: "1rem",
-        }}
-      >
+    <Container sx={{ mt: 5 }}>
+      <Typography variant="h4" gutterBottom align="center">
+        All Plants 🌿
+      </Typography>
+      <Grid container spacing={3}>
         {plants.map((plant) => (
-          <div
-            key={plant.id}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "1rem",
-            }}
-          >
-            <img
-              src={plant.imageUrl}
-              alt={plant.name}
-              style={{ width: "100%", borderRadius: "8px" }}
-            />
-            <h2>{plant.name}</h2>
-            <p>Email: {plant.ownerMail}</p>
-            <p>Address: {plant.address}</p>
-          </div>
+          <Grid item xs={12} sm={6} md={4} key={plant.id}>
+            <Card>
+              <CardMedia
+                component="img"
+                height="200"
+                image={plant.imageUrl}
+                alt={plant.name}
+              />
+              <CardContent>
+                <Typography variant="h6">{plant.name}</Typography>
+                <Typography variant="body2">
+                  Email: {plant.ownerMail}
+                </Typography>
+                <Typography variant="body2">
+                  Address: {plant.address}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 }

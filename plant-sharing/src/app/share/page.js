@@ -1,6 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Alert,
+  Container,
+  Paper,
+} from "@mui/material";
 
 export default function SharePage() {
   const [name, setName] = useState("");
@@ -8,6 +17,7 @@ export default function SharePage() {
   const [ownerMail, setOwnerMail] = useState("");
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
+  const [alertType, setAlertType] = useState("success"); // success veya error
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,6 +30,7 @@ export default function SharePage() {
 
     if (res.ok) {
       setMessage("Plant shared successfully!");
+      setAlertType("success");
       setName("");
       setImageUrl("");
       setOwnerMail("");
@@ -27,52 +38,58 @@ export default function SharePage() {
     } else {
       const data = await res.json();
       setMessage(data.error || "Something went wrong");
+      setAlertType("error");
     }
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Share Your Plant 🌱</h1>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          maxWidth: "400px",
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Plant Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Image URL"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Your Email"
-          value={ownerMail}
-          onChange={(e) => setOwnerMail(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          required
-        />
-        <button type="submit">Share Plant</button>
-      </form>
-      {message && <p>{message}</p>}
-    </div>
+    <Container maxWidth="sm" sx={{ mt: 5 }}>
+      <Paper sx={{ p: 4 }} elevation={3}>
+        <Typography variant="h4" gutterBottom align="center">
+          Share Your Plant 🌱
+        </Typography>
+
+        {message && (
+          <Alert severity={alertType} sx={{ mb: 2 }}>
+            {message}
+          </Alert>
+        )}
+
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        >
+          <TextField
+            label="Plant Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <TextField
+            label="Image URL"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            required
+          />
+          <TextField
+            label="Your Email"
+            type="email"
+            value={ownerMail}
+            onChange={(e) => setOwnerMail(e.target.value)}
+            required
+          />
+          <TextField
+            label="Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            required
+          />
+          <Button type="submit" variant="contained" color="success">
+            Share Plant
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
   );
 }
