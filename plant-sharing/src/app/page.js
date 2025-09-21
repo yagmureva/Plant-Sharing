@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./page.module.css";
 import UploadIcon from "@mui/icons-material/Upload";
 import SearchIcon from "@mui/icons-material/Search";
@@ -7,7 +9,6 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <div className={styles.mainContent}>
-        {/* Hero Section */}
         <div className={styles.hero}>
           <h1>🌱 Welcome to Plant Sharing</h1>
           <p>
@@ -23,7 +24,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Feature Section */}
         <div className={styles.features}>
           <div className={styles.feature}>
             <UploadIcon sx={{ fontSize: 64, color: "#2e7d32" }} />
@@ -45,7 +45,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Footer */}
       <footer className={styles.footer}>
         <p>© 2025 Plant Sharing. All rights reserved.</p>
       </footer>
