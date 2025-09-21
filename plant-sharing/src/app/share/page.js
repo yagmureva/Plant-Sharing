@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
@@ -12,12 +13,13 @@ import {
 } from "@mui/material";
 
 export default function SharePage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [ownerMail, setOwnerMail] = useState("");
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
-  const [alertType, setAlertType] = useState("success"); // success veya error
+  const [alertType, setAlertType] = useState("success");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +37,8 @@ export default function SharePage() {
       setImageUrl("");
       setOwnerMail("");
       setAddress("");
+      // 1 saniye bekleyip plants sayfasına yönlendir
+      setTimeout(() => router.push("/plants"), 1000);
     } else {
       const data = await res.json();
       setMessage(data.error || "Something went wrong");
@@ -87,6 +91,13 @@ export default function SharePage() {
           />
           <Button type="submit" variant="contained" color="success">
             Share Plant
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => router.push("/")}
+          >
+            Back to Home
           </Button>
         </Box>
       </Paper>
