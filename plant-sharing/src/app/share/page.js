@@ -1,58 +1,52 @@
 "use client";
 
 import { useState } from "react";
-import styles from "./share.module.css";
 
-export default function SharePlant() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+export default function SharePage() {
+  const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [ownerMail, setOwnerMail] = useState("");
+  const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch("/api/plants", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          description,
-          imageUrl,
-          ownerId: 1, // demo user
-        }),
-      });
-      if (res.ok) {
-        setMessage("Plant shared successfully!");
-        setTitle("");
-        setDescription("");
-        setImageUrl("");
-      } else {
-        setMessage("Failed to share plant.");
-      }
-    } catch (err) {
-      console.error(err);
-      setMessage("Error occurred.");
+
+    const res = await fetch("/api/plants", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, imageUrl, ownerMail, address }),
+    });
+
+    if (res.ok) {
+      setMessage("Plant shared successfully!");
+      setName("");
+      setImageUrl("");
+      setOwnerMail("");
+      setAddress("");
+    } else {
+      const data = await res.json();
+      setMessage(data.error || "Something went wrong");
     }
   };
 
   return (
-    <div className={styles.page}>
-      <h1 className={styles.title}>Share Your Plant 🌱</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
+    <div style={{ padding: "2rem" }}>
+      <h1>Share Your Plant 🌱</h1>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1rem",
+          maxWidth: "400px",
+        }}
+      >
         <input
           type="text"
-          placeholder="Plant Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className={styles.inputField}
-          required
-        />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className={styles.textareaField}
+          placeholder="Plant Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
         <input
@@ -60,14 +54,25 @@ export default function SharePlant() {
           placeholder="Image URL"
           value={imageUrl}
           onChange={(e) => setImageUrl(e.target.value)}
-          className={styles.inputField}
           required
         />
-        <button type="submit" className={styles.submitButton}>
-          Share Plant
-        </button>
+        <input
+          type="email"
+          placeholder="Your Email"
+          value={ownerMail}
+          onChange={(e) => setOwnerMail(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          required
+        />
+        <button type="submit">Share Plant</button>
       </form>
-      {message && <p className={styles.message}>{message}</p>}
+      {message && <p>{message}</p>}
     </div>
   );
 }

@@ -1,36 +1,43 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./plants.module.css";
 
-export default function Plants() {
+export default function PlantsPage() {
   const [plants, setPlants] = useState([]);
 
   useEffect(() => {
-    async function fetchPlants() {
-      const res = await fetch("/api/plants");
-      const data = await res.json();
-      setPlants(data);
-    }
-    fetchPlants();
+    fetch("/api/plants")
+      .then((res) => res.json())
+      .then((data) => setPlants(data));
   }, []);
 
   return (
-    <div className={styles.page}>
-      <h1 className={styles.pageTitle}>Plants 🌱</h1>
-      <div className={styles.list}>
+    <div style={{ padding: "2rem" }}>
+      <h1>All Plants 🌿</h1>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+          gap: "1rem",
+        }}
+      >
         {plants.map((plant) => (
-          <div key={plant.id} className={styles.card}>
+          <div
+            key={plant.id}
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              padding: "1rem",
+            }}
+          >
             <img
               src={plant.imageUrl}
-              alt={plant.title}
-              className={styles.cardImage}
+              alt={plant.name}
+              style={{ width: "100%", borderRadius: "8px" }}
             />
-            <h3 className={styles.cardTitle}>{plant.title}</h3>
-            <p className={styles.cardDescription}>{plant.description}</p>
-            <small className={styles.cardOwner}>
-              Shared by: {plant.owner.name}
-            </small>
+            <h2>{plant.name}</h2>
+            <p>Email: {plant.ownerMail}</p>
+            <p>Address: {plant.address}</p>
           </div>
         ))}
       </div>

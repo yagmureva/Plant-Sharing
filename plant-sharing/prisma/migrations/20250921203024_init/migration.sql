@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "Plant" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "imageUrl" TEXT NOT NULL,
+    "ownerMail" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
