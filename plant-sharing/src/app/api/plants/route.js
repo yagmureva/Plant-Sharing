@@ -1,24 +1,37 @@
 import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
+// Get all plants
 export async function GET() {
   const plants = await prisma.plant.findMany();
-  return NextResponse.json(plants);
+  return new Response(JSON.stringify(plants));
 }
 
-export async function POST(request) {
-  const body = await request.json();
-  const { name, imageUrl, ownerMail, address } = body;
-
-  if (!name || !imageUrl || !ownerMail || !address) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-  }
-
+// Add a new plant
+export async function POST(req) {
+  const { name, ownerMail, address, imageUrl } = await req.json();
   const plant = await prisma.plant.create({
-    data: { name, imageUrl, ownerMail, address },
+    data: { name, ownerMail, address, imageUrl },
   });
+  return new Response(JSON.stringify(plant));
+}
 
-  return NextResponse.json(plant);
+// Update a plant (everyone can edit)
+export async function PUT(req) {
+  const { id, name, ownerMail, address, imageUrl } = await req.json();
+  const updated = await prisma.plant.update({
+    where: { id: Number(id) },
+    data: { name, ownerMail, address, imageUrl },
+  });
+  return new Response(JSON.stringify(updated));
+}
+
+// Delete a plant (everyone can delete)
+export async function DELETE(req) {
+  const { id } = await req.json();
+  await prisma.plant.delete({
+    where: { id: Number(id) },
+  });
+  return new Response(JSON.stringify({ success: true }));
 }

@@ -15,29 +15,43 @@ import {
 export default function SharePage() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
   const [ownerMail, setOwnerMail] = useState("");
   const [address, setAddress] = useState("");
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [message, setMessage] = useState("");
   const [alertType, setAlertType] = useState("success");
 
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    setPreview(URL.createObjectURL(selectedFile));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!file) {
+      setMessage("Please select an image");
+      setAlertType("error");
+      return;
+    }
 
-    const res = await fetch("/api/plants", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, imageUrl, ownerMail, address }),
-    });
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("name", name);
+    formData.append("ownerMail", ownerMail);
+    formData.append("address", address);
+
+    const res = await fetch("/api/upload", { method: "POST", body: formData });
 
     if (res.ok) {
       setMessage("Plant shared successfully!");
       setAlertType("success");
       setName("");
-      setImageUrl("");
       setOwnerMail("");
       setAddress("");
-      // 1 saniye bekleyip plants sayfasına yönlendir
+      setFile(null);
+      setPreview(null);
       setTimeout(() => router.push("/plants"), 1000);
     } else {
       const data = await res.json();
@@ -71,12 +85,6 @@ export default function SharePage() {
             required
           />
           <TextField
-            label="Image URL"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            required
-          />
-          <TextField
             label="Your Email"
             type="email"
             value={ownerMail}
@@ -89,6 +97,26 @@ export default function SharePage() {
             onChange={(e) => setAddress(e.target.value)}
             required
           />
+
+          <Button variant="outlined" component="label">
+            Select Image
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleFileChange}
+            />
+          </Button>
+
+          {preview && (
+            <Box
+              component="img"
+              src={preview}
+              alt="preview"
+              sx={{ width: "100%", borderRadius: 2, mt: 1 }}
+            />
+          )}
+
           <Button type="submit" variant="contained" color="success">
             Share Plant
           </Button>
