@@ -15,14 +15,18 @@ import {
   Box,
   Stack,
   CircularProgress,
+  CardActions,
+  IconButton,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import HomeIcon from "@mui/icons-material/Home";
 
 export default function PlantsPage() {
   const router = useRouter();
-  const [plants, setPlants] = useState(null); // null for SSR-safe hydration
+  const [plants, setPlants] = useState(null);
   const [editPlant, setEditPlant] = useState(null);
 
-  // Fetch plants on client only
   useEffect(() => {
     fetchPlants();
   }, []);
@@ -57,10 +61,9 @@ export default function PlantsPage() {
     fetchPlants();
   };
 
-  // Render loading state for SSR-safe hydration
   if (plants === null) {
     return (
-      <Container sx={{ mt: 5, textAlign: "center" }}>
+      <Container sx={{ mt: 10, textAlign: "center" }}>
         <CircularProgress />
         <Typography mt={2}>Loading plants...</Typography>
       </Container>
@@ -68,15 +71,27 @@ export default function PlantsPage() {
   }
 
   return (
-    <Container sx={{ mt: 5 }}>
-      <Typography variant="h4" gutterBottom align="center">
-        All Plants 🌿
-      </Typography>
+    <Container sx={{ mt: 6, mb: 6 }}>
+      {/* Header with title and back button */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
+        <Typography
+          variant="h3"
+          sx={{ fontWeight: "bold", color: "primary.main" }}
+        >
+          🌿 Shared Plants
+        </Typography>
 
-      <Box sx={{ textAlign: "center", mb: 3 }}>
         <Button
           variant="contained"
           color="primary"
+          startIcon={<HomeIcon />}
           onClick={() => router.push("/")}
         >
           Back to Home
@@ -85,7 +100,7 @@ export default function PlantsPage() {
 
       {plants.length === 0 ? (
         <Typography align="center" color="text.secondary">
-          No plants shared yet.
+          No plants shared yet. Be the first to add one!
         </Typography>
       ) : (
         <Grid container spacing={4}>
@@ -93,50 +108,51 @@ export default function PlantsPage() {
             <Grid item xs={12} sm={6} md={4} key={plant.id}>
               <Card
                 sx={{
-                  borderRadius: 3,
-                  boxShadow: 3,
+                  borderRadius: 4,
+                  boxShadow: 4,
                   transition: "0.3s",
-                  "&:hover": { transform: "scale(1.03)", boxShadow: 6 },
-                  overflow: "hidden",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  "&:hover": { transform: "scale(1.03)", boxShadow: 8 },
                 }}
               >
                 <CardMedia
                   component="img"
-                  height="220"
+                  height="200"
                   image={plant.imageUrl}
                   alt={plant.name}
                   sx={{ objectFit: "cover" }}
                 />
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{ fontWeight: "bold", color: "success.main" }}
+                  >
                     {plant.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Email: {plant.ownerMail}
+                    <strong>Email:</strong> {plant.ownerMail}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Address: {plant.address}
+                    <strong>Address:</strong> {plant.address}
                   </Typography>
-
-                  <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      color="error"
-                      onClick={() => handleDelete(plant.id)}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => setEditPlant(plant)}
-                    >
-                      Edit
-                    </Button>
-                  </Stack>
                 </CardContent>
+                <CardActions sx={{ justifyContent: "flex-end", p: 2 }}>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDelete(plant.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    color="secondary"
+                    onClick={() => setEditPlant(plant)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </CardActions>
               </Card>
             </Grid>
           ))}
@@ -145,14 +161,21 @@ export default function PlantsPage() {
 
       {/* Edit Dialog */}
       {editPlant && (
-        <Dialog open onClose={() => setEditPlant(null)}>
+        <Dialog
+          open
+          onClose={() => setEditPlant(null)}
+          PaperProps={{
+            sx: { borderRadius: 3, p: 2, minWidth: 400 },
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+            Edit Plant 🌱
+          </Typography>
           <Box
             sx={{
-              p: 3,
               display: "flex",
               flexDirection: "column",
               gap: 2,
-              minWidth: 300,
             }}
           >
             <TextField
@@ -161,6 +184,7 @@ export default function PlantsPage() {
               onChange={(e) =>
                 setEditPlant({ ...editPlant, name: e.target.value })
               }
+              fullWidth
             />
             <TextField
               label="Email"
@@ -168,6 +192,7 @@ export default function PlantsPage() {
               onChange={(e) =>
                 setEditPlant({ ...editPlant, ownerMail: e.target.value })
               }
+              fullWidth
             />
             <TextField
               label="Address"
@@ -175,6 +200,7 @@ export default function PlantsPage() {
               onChange={(e) =>
                 setEditPlant({ ...editPlant, address: e.target.value })
               }
+              fullWidth
             />
             <TextField
               label="Image URL"
@@ -182,8 +208,9 @@ export default function PlantsPage() {
               onChange={(e) =>
                 setEditPlant({ ...editPlant, imageUrl: e.target.value })
               }
+              fullWidth
             />
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
               <Button
                 variant="contained"
                 color="success"
