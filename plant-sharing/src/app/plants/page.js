@@ -71,113 +71,96 @@ export default function PlantsPage() {
   }
 
   return (
-    <Container sx={{ mt: 6, mb: 6 }}>
-      {/* Header with title and back button */}
+    <Container sx={{ maxWidth: 900, mt: 6, mb: 6, px: 2 }}>
+      {/* Header */}
+      <Typography
+        variant="h3"
+        align="center"
+        sx={{ mb: 4, color: "#2e7d32", fontWeight: "bold" }}
+      >
+        🌿 Shared Plants
+      </Typography>
+
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 4,
+          flexWrap: "wrap",
+          gap: 4,
+          justifyContent: "center",
         }}
       >
-        <Typography
-          variant="h3"
-          sx={{ fontWeight: "bold", color: "primary.main" }}
-        >
-          🌿 Shared Plants
-        </Typography>
+        {plants.length === 0 ? (
+          <Typography
+            align="center"
+            color="text.secondary"
+            sx={{ width: "100%" }}
+          >
+            No plants shared yet. Be the first to add one!
+          </Typography>
+        ) : (
+          plants.map((plant) => (
+            <Card
+              key={plant.id}
+              sx={{
+                width: 250,
+                backgroundColor: "#f4f4f4",
+                borderRadius: 3,
+                overflow: "hidden",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+                textAlign: "center",
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="180"
+                image={plant.imageUrl}
+                alt={plant.name}
+                sx={{ objectFit: "cover" }}
+              />
+              <CardContent>
+                <Typography
+                  sx={{ fontWeight: "bold", color: "#2e7d32", mb: 0.5 }}
+                >
+                  {plant.name}
+                </Typography>
+                <Typography sx={{ fontSize: "0.95rem", color: "#555", mb: 1 }}>
+                  {plant.address}
+                </Typography>
+                <Typography sx={{ fontSize: "0.9rem", color: "#777" }}>
+                  Owner: {plant.ownerMail}
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ justifyContent: "flex-end", p: 1 }}>
+                <IconButton
+                  onClick={() => handleDelete(plant.id)}
+                  sx={{ color: "#f79292ff" }} // kırmızı yerine kendi renk
+                >
+                  <DeleteIcon />
+                </IconButton>
 
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<HomeIcon />}
-          onClick={() => router.push("/")}
-        >
-          Back to Home
-        </Button>
+                <IconButton
+                  onClick={() => setEditPlant(plant)}
+                  sx={{ color: "#2e7d32" }} // yeşil örnek
+                >
+                  <EditIcon />
+                </IconButton>
+              </CardActions>
+            </Card>
+          ))
+        )}
       </Box>
-
-      {plants.length === 0 ? (
-        <Typography align="center" color="text.secondary">
-          No plants shared yet. Be the first to add one!
-        </Typography>
-      ) : (
-        <Grid container spacing={4}>
-          {plants.map((plant) => (
-            <Grid item xs={12} sm={6} md={4} key={plant.id}>
-              <Card
-                sx={{
-                  borderRadius: 4,
-                  boxShadow: 4,
-                  transition: "0.3s",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  "&:hover": { transform: "scale(1.03)", boxShadow: 8 },
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={plant.imageUrl}
-                  alt={plant.name}
-                  sx={{ objectFit: "cover" }}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography
-                    variant="h6"
-                    gutterBottom
-                    sx={{ fontWeight: "bold", color: "success.main" }}
-                  >
-                    {plant.name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    <strong>Email:</strong> {plant.ownerMail}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    <strong>Address:</strong> {plant.address}
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: "flex-end", p: 2 }}>
-                  <IconButton
-                    color="error"
-                    onClick={() => handleDelete(plant.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => setEditPlant(plant)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      )}
 
       {/* Edit Dialog */}
       {editPlant && (
         <Dialog
           open
           onClose={() => setEditPlant(null)}
-          PaperProps={{
-            sx: { borderRadius: 3, p: 2, minWidth: 400 },
-          }}
+          PaperProps={{ sx: { borderRadius: 3, p: 2, minWidth: 400 } }}
         >
           <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
             Edit Plant 🌱
           </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <TextField
               label="Name"
               value={editPlant.name}
@@ -229,6 +212,18 @@ export default function PlantsPage() {
           </Box>
         </Dialog>
       )}
+
+      {/* Back Button */}
+      <Box sx={{ mt: 4, textAlign: "center" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<HomeIcon />}
+          onClick={() => router.push("/")}
+        >
+          Back to Home
+        </Button>
+      </Box>
     </Container>
   );
 }
